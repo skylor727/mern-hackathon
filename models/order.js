@@ -20,7 +20,8 @@ const orderSchema = new Schema({
   lineItems: [lineItemSchema],
   isPaid: { type: Boolean, default: false }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true }
 });
 
 orderSchema.virtual('orderTotal').get(function() {
@@ -34,5 +35,18 @@ orderSchema.virtual('totalQty').get(function() {
 orderSchema.virtual('orderId').get(function() {
   return this.id.slice(-6).toUpperCase();
 });
+
+orderSchema.statics.getCart = function(userId) {
+  // 'this' is the Order model
+  return this.findOneAndUpdate(
+    // query
+    { user: userId, isPaid: false },
+    // update
+    { user: userId },
+    // upsert option will create the doc if 
+    // it doesn't exist
+    { upsert: true, new: true }
+  );
+};
 
 module.exports = mongoose.model('Order', orderSchema);
