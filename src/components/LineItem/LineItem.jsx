@@ -13,8 +13,8 @@ export default function LineItem({ lineItem, isPaid }) {
           <button
             className="btn-xs"
             onClick={() => alert('clicked')}
-            >−</button>
-          }
+          >−</button>
+        }
         <span>{lineItem.qty}</span>
         {!isPaid &&
           <button
